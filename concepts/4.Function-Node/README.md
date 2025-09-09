@@ -1,7 +1,7 @@
 
 ---
 
-## 5️⃣ Function Node – Adding Custom Logic 🧑‍💻
+## Function Node – Adding Custom Logic 🧑‍💻
 
 👉 **Use simple JavaScript inside n8n to manipulate or generate data.**
 
