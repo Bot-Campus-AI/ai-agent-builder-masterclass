@@ -18,7 +18,7 @@ The masterclass is designed to help participants learn how to build automation a
 ## How to Use
 
 1. Clone the repository:
-   git clone [https://github.com/YOUR\_USERNAME/ai-agent-builder-masterclass.git](https://github.com/YOUR_USERNAME/ai-agent-builder-masterclass.git)
+   git clone [https://github.com/Bot-Campus-AI/ai-agent-builder-masterclass](https://github.com/Bot-Campus-AI/ai-agent-builder-masterclass)
 
 2. Import the JSON workflows into your n8n instance.
 
