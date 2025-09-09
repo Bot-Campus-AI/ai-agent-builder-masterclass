@@ -1,0 +1,40 @@
+# macOS system files
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Node / npm
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# n8n related
+.n8n/
+.env
+.env.local
+.env.*.local
+
+# Logs
+*.log
+logs/
+*.out
+*.err
+
+# Temporary files
+*.swp
+*.swo
+*~
+.tmp
+temp/
+.cache/
+
+# IDE / Editor settings
+.vscode/
+.idea/
+*.iml
+
+# Python virtualenv (if ever used for scripts)
+.venv/
+__pycache__/
+*.pyc

@@ -1,0 +1,117 @@
+{
+  "name": "Set Node",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -416,
+        -144
+      ],
+      "id": "3b826c49-a2da-4402-9550-3f8c7f1da2db",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "eae25e05-df09-43c1-9ce4-2489dd10238f",
+              "name": "status",
+              "value": "Active",
+              "type": "string"
+            },
+            {
+              "id": "a23b8ed9-3902-402d-aaeb-2e9fbd35aaca",
+              "name": "score",
+              "value": "65",
+              "type": "string"
+            },
+            {
+              "id": "0051adfc-cb53-4ea4-bf50-92d61553fc36",
+              "name": "fullName",
+              "value": "Abdullah Khan",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -208,
+        -144
+      ],
+      "id": "584a66a4-3e17-4712-b6d3-65e25199182a",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "url": "https://httpbin.org/get",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "status",
+              "value": "={{ $json.status }}"
+            },
+            {
+              "name": "score",
+              "value": "={{ $json.score }}"
+            },
+            {
+              "name": "fullName",
+              "value": "={{ $json.fullName }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        0,
+        -144
+      ],
+      "id": "f33f8674-f112-41b6-b9d2-f73ade71dfc7",
+      "name": "HTTP Request"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "6b92d7b3-1584-43cd-af93-f89233d23af3",
+  "meta": {
+    "instanceId": "36ff5823de645247c409d00d5ed0aecd5c29499b9cb9437a651601e2b22aaceb"
+  },
+  "id": "sRIs3Q4vHiitu5Ou",
+  "tags": []
+}
