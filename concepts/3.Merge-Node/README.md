@@ -1,7 +1,7 @@
 
 ---
 
-## 4️⃣ Merge Node – Combining Data from Multiple Paths 🔗
+## Merge Node – Combining Data from Multiple Paths 🔗
 
 👉 **Take two branches (e.g., name + email) and merge into one.**
 
