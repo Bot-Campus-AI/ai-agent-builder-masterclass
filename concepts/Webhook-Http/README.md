@@ -7,7 +7,7 @@
 
 ## 🎯 **Objective**
 
-Show how **dynamic user input** can be captured in real time through a **Webhook** and then automatically passed to an **HTTP Request** node, which calls an external API. Students should walk away with a clear understanding that n8n workflows can adapt to **live incoming data**.
+Show how **dynamic user input** can be captured in real time through a **Webhook** and then automatically passed to an **HTTP Request** node, which calls an external API. You should walk away with a clear understanding that n8n workflows can adapt to **live incoming data**.
 
 ---
 
@@ -77,9 +77,6 @@ Show how **dynamic user input** can be captured in real time through a **Webhook
 
 ---
 
-Abdullah — here’s the **rewritten Step 5** with clear sub-steps exactly how you want it:
-
----
 
 ## **Step 5: Understand the HTTP Request Output (Elaborated)**
 
