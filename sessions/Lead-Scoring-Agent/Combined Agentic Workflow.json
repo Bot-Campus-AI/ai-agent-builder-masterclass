@@ -1,0 +1,249 @@
+{
+  "name": "Combined Agentic Workflow",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "capture-leads",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        -640,
+        -352
+      ],
+      "id": "d94ceaf5-32e0-4fe6-a11e-ed27cd939e45",
+      "name": "Webhook",
+      "webhookId": "aea437ba-169a-4b38-b957-38c0e24aac0a"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "2f840d1a-4d84-4589-9821-cd9f4ec00bfe",
+              "name": "name",
+              "value": "={{ $json.body.name }}",
+              "type": "string"
+            },
+            {
+              "id": "005ff31c-c635-4755-a56d-2936488055fe",
+              "name": "email",
+              "value": "={{ $json.body.email }}",
+              "type": "string"
+            },
+            {
+              "id": "294c4ed3-b79e-4fe3-b361-08d9699cf86b",
+              "name": "message",
+              "value": "={{ $json.body.message }}",
+              "type": "string"
+            },
+            {
+              "id": "d60aaac3-2793-42fb-8ece-8d67d685bd99",
+              "name": "status",
+              "value": "new-lead",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -400,
+        -352
+      ],
+      "id": "e0cd2cfb-f8f2-4983-bb9b-bde2c55fa28a",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "jsCode": "let score = $json.message.toLowerCase().includes(\"pricing\") ? 90 : 60;\nreturn [{\n  ...$json,\n  score\n}];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -192,
+        -416
+      ],
+      "id": "2dec1256-576e-4426-aed1-53edbaf00ed2",
+      "name": "Code"
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-4",
+          "mode": "list",
+          "cachedResultName": "GPT-4"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "=You are a sales assistant. Based on the following customer message, write a short professional email reply.  \n- Format the email using proper HTML paragraph tags (<p>...</p>) instead of line breaks.  \n- Keep it polite and professional.  \n- Include a closing line with:  \n  <p>Best regards,<br>BotCampus Support</p>  \n\nCustomer message: \"{{$json.message}}\"  \nCustomer name: \"{{$json.name}}\"\n"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [
+        32,
+        -544
+      ],
+      "id": "66ee2523-407f-4008-9c5c-9fb74d536d66",
+      "name": "Message a model",
+      "credentials": {
+        "openAiApi": {
+          "id": "KYzKhytCe7Mw6Rln",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $json.email }}",
+        "subject": "Regarding your enquire",
+        "message": "={{ $json.ai_reply }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        720,
+        -240
+      ],
+      "id": "8c7dd5cd-856b-4698-8ac1-10c9dfb7e176",
+      "name": "Send a message",
+      "webhookId": "0da3c595-3c5b-40ad-b092-e2782a8b1a8b",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "wbf1kUOtVTiReF5e",
+          "name": "Gmail account 5"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        560,
+        -336
+      ],
+      "id": "f0e2783e-4f8f-4c0a-bc46-2a85b2dbcb84",
+      "name": "Merge"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "70963613-6cda-4d58-9546-ac5543c8e04d",
+              "name": "ai_reply",
+              "value": "={{ $json.message.content }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        384,
+        -528
+      ],
+      "id": "59fe30ea-bd8d-4725-ae1a-76d606ad8527",
+      "name": "Edit Fields1"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Code",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code": {
+      "main": [
+        [
+          {
+            "node": "Message a model",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Message a model": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields1": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "74b2f6a8-4a73-44df-af44-2db2ed8bf1f0",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "36ff5823de645247c409d00d5ed0aecd5c29499b9cb9437a651601e2b22aaceb"
+  },
+  "id": "UUbfd2SCAfUsWjBm",
+  "tags": []
+}
