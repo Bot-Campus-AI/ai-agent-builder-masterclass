@@ -1,0 +1,352 @@
+{
+  "name": "support-ticket-router-agent",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "support-ticket",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        -784,
+        -144
+      ],
+      "id": "bd863f9d-2b52-4be8-8e3c-b5dd8cb2842b",
+      "name": "Webhook",
+      "webhookId": "eb9591d4-0813-4f67-ab14-804fec356914"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "c3b75529-b11f-4cd3-a912-7278d5e60fc3",
+              "name": "fromName",
+              "value": "={{ $json.body.name }}",
+              "type": "string"
+            },
+            {
+              "id": "9809367c-5fc0-4f79-9a62-8f975343b384",
+              "name": "fromEmail",
+              "value": "={{ $json.body.email }}",
+              "type": "string"
+            },
+            {
+              "id": "0e1e823f-975b-4777-b74d-8eb93950e100",
+              "name": "subject",
+              "value": "={{ $json.body.subject }}",
+              "type": "string"
+            },
+            {
+              "id": "3f96a914-91c2-4b08-878e-040f70b659a6",
+              "name": "body",
+              "value": "={{ $json.body.message }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -576,
+        -144
+      ],
+      "id": "eae66a80-1de3-4ea6-b392-f2379800b2e9",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-4",
+          "mode": "list",
+          "cachedResultName": "GPT-4"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "=You are a support triage classifier. Categorize and summarize the ticket.\n\nRules for priority:\n- Pricing or billing related inquiries = \"high\"\n- Technical support issues = \"medium\"\n- General or casual inquiries = \"low\"\n\nReturn ONLY valid JSON, nothing else:\n{\n  \"category\": \"billing|tech_support|general\",\n  \"priority\": \"low|medium|high\",\n  \"summary\": \"<one line>\"\n}\n\nSubject: \"{{$json.subject}}\"\nBody: \"{{$json.body}}\"\n"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [
+        -368,
+        -304
+      ],
+      "id": "53e6257b-4eab-42fb-8697-7700d57732e7",
+      "name": "Message a model",
+      "credentials": {
+        "openAiApi": {
+          "id": "KYzKhytCe7Mw6Rln",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "combineBy": "combineByPosition",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        128,
+        0
+      ],
+      "id": "f7443c2e-a16a-4273-bc1f-2cd3190096a8",
+      "name": "Merge"
+    },
+    {
+      "parameters": {
+        "jsCode": "const ai = JSON.parse($json.message.content);\n\nreturn [\n  {\n    json: {\n      category: ai.category,\n      priority: ai.priority,\n      summary: ai.summary,\n    }\n  }\n];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -16,
+        -304
+      ],
+      "id": "3069a3da-8ab0-4026-aba9-96bc63ba2ead",
+      "name": "Code"
+    },
+    {
+      "parameters": {
+        "sendTo": "support@botcampus.ai",
+        "subject": "={{ $json.fromName }} needs {{ $json.subject }} information on Accounting",
+        "message": "=Name:  {{ $json.fromName }} \nMail: {{ $json.fromEmail }}\nInformation: {{ $json.body }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        560,
+        -368
+      ],
+      "id": "5f69879d-7bd2-4ca0-bdd4-74892bffa37b",
+      "name": "Send a message",
+      "webhookId": "67145309-b8ca-4ea7-99ae-838c71aed37d",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "wbf1kUOtVTiReF5e",
+          "name": "Gmail account 5"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.category }}",
+                    "rightValue": "billing",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "6fb88708-e8af-490c-b6b3-de2c8235c325"
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "b5c492d0-3b6f-4c85-8c0a-018c9e6b5ecb",
+                    "leftValue": "={{ $json.category }}",
+                    "rightValue": "tech_support",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            }
+          ]
+        },
+        "options": {
+          "fallbackOutput": "extra"
+        }
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        320,
+        -128
+      ],
+      "id": "10a1d80b-005c-439c-a062-dc46c730510b",
+      "name": "Switch"
+    },
+    {
+      "parameters": {
+        "sendTo": "support@botcampus.ai",
+        "subject": "Need information on tech support",
+        "message": "=Name: {{ $json.fromName }} Messsage: {{ $json.body }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        608,
+        -144
+      ],
+      "id": "753765e2-0b3f-4a66-b7cd-a387a22318b2",
+      "name": "Send a message1",
+      "webhookId": "8d277299-42a3-4a16-84d6-d314b51d64b7",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "wbf1kUOtVTiReF5e",
+          "name": "Gmail account 5"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "spreadsheet",
+        "title": "= {{ $json.fromName }} ",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.6,
+      "position": [
+        592,
+        96
+      ],
+      "id": "551abe03-afa7-4e99-b7ce-e9eb8c742e16",
+      "name": "Create spreadsheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "ZwoFhpV5kflQYaTm",
+          "name": "Google Sheets account 4"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Message a model",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Message a model": {
+      "main": [
+        [
+          {
+            "node": "Code",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "Switch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Send a message1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Create spreadsheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "6c70551a-e56d-4183-a1fb-cb8493ba1e4a",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "36ff5823de645247c409d00d5ed0aecd5c29499b9cb9437a651601e2b22aaceb"
+  },
+  "id": "1LGDloh1yQlgD5HG",
+  "tags": []
+}
