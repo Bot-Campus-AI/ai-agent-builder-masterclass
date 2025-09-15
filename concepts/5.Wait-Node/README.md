@@ -57,10 +57,6 @@ Show how the Wait Node lets you **pause execution** until a certain time or exte
 
 ---
 
-Got it ✅ — from now on, I’ll always give you **real-world use cases** alongside each node. Let’s take the **Wait Node** and then I’ll recap the others we’ve covered so far too.
-
----
-
 ## ⏳ Wait Node – Real-Time Use Cases
 
 * **Lead Nurturing** → Capture a lead, then *wait 24 hours* before sending a follow-up email.
