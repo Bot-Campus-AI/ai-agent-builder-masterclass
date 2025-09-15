@@ -69,4 +69,5 @@ Got it ✅ — from now on, I’ll always give you **real-world use cases** alon
 * **Approval Workflows** → Pause workflow until manager clicks an approval link, then continue.
 * **Scheduled Messages** → Capture event signup → wait until 1 day before event → send reminder.
 
+
 ---
