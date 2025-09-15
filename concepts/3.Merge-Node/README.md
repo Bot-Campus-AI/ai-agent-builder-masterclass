@@ -58,3 +58,11 @@
      ```
 
 ---
+
+## 🔗 Merge Node – Real-Time Use Cases
+
+* **Lead Consolidation** → Merge user’s form submission (name/email) with CRM lookup data.
+* **Customer Records** → Merge order info with shipping details before saving to database.
+* **Analytics** → Merge two API responses (e.g., marketing + sales data) into one record.
+
+---

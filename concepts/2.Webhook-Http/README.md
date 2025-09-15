@@ -145,4 +145,12 @@ You’ll see a JSON response similar to:
 
 ---
 
+## 📡 Webhook Node – Real-Time Use Cases
+
+* **Incoming Leads** → Capture form submissions directly from website → process instantly.
+* **Payment Gateway Hooks** → Stripe/PayPal webhook triggers workflow when payment is successful.
+* **IoT Devices** → A device sends a webhook (e.g., temperature threshold crossed) → automation reacts.
+
+---
+
 

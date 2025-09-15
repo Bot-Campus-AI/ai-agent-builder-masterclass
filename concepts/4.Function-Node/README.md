@@ -58,3 +58,11 @@ Function Node can transform data in ways that Set / Merge cannot — for example
      ```
 
 ---
+
+## 🧑‍💻 Function Node – Real-Time Use Cases
+
+* **Custom Calculations** → Calculate discounts, taxes, or commissions dynamically.
+* **Data Transformation** → Reformat date fields (`2025-09-15 → 15/09/2025`).
+* **Custom Logic** → Add conditional fields (e.g., “status = VIP” if spend > \$5000).
+
+---
