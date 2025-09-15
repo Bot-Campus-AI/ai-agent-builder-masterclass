@@ -1,0 +1,206 @@
+{
+  "name": "data-transformation",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -496,
+        -48
+      ],
+      "id": "e1a2318f-3475-40ef-9361-8b11defdb8bd",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.dateTime",
+      "typeVersion": 2,
+      "position": [
+        -288,
+        -48
+      ],
+      "id": "8f1b63d8-ae62-452f-a306-ca86208bdcf9",
+      "name": "Date & Time"
+    },
+    {
+      "parameters": {
+        "operation": "formatDate",
+        "date": "={{ $json.currentDate }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.dateTime",
+      "typeVersion": 2,
+      "position": [
+        -80,
+        -48
+      ],
+      "id": "487d5fc6-b405-4bf4-8857-bbe74d60a2b5",
+      "name": "Date & Time1"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Grab the formatted date from the previous node\nconst formattedDate = $input.first().json.formattedDate;\n\n// Build a Slack-friendly message\nconst message = `🔔 Workflow executed successfully at ${formattedDate}`;\n\n// Return as an array of objects\nreturn [\n  {\n    json: {\n      message: message\n    }\n  }\n];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        128,
+        -48
+      ],
+      "id": "6954110c-1d56-48de-be77-7c068440f412",
+      "name": "Code"
+    },
+    {
+      "parameters": {
+        "select": "channel",
+        "channelId": {
+          "__rl": true,
+          "value": "C09FELXFR7E",
+          "mode": "list",
+          "cachedResultName": "alerts"
+        },
+        "text": "={{ $json.message }}\n🎯 New Lead Captured:\nName: {{$json.name}} {{$json.last_name}}\nEmail: {{$json.email}}\n",
+        "otherOptions": {}
+      },
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.3,
+      "position": [
+        752,
+        -48
+      ],
+      "id": "7bb367a0-3992-426c-8b48-a970524cc296",
+      "name": "Send a message",
+      "webhookId": "5296099c-2975-4c48-9ea3-56e03272691f",
+      "credentials": {
+        "slackApi": {
+          "id": "byScDh3yo2v0Mb9y",
+          "name": "Slack account 5"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "={\n  \"first_name\": \"Rahul\",\n  \"last_name\": \"Sharma\",\n  \"email_id\": \"rahul.sharma@accenture.com\"\n}",
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        336,
+        -48
+      ],
+      "id": "6d785366-e3af-4516-9850-8856f3382d37",
+      "name": "Fake Lead"
+    },
+    {
+      "parameters": {
+        "keys": {
+          "key": [
+            {
+              "currentKey": "first_name",
+              "newKey": "name"
+            },
+            {
+              "currentKey": "email_id",
+              "newKey": "email"
+            }
+          ]
+        },
+        "additionalOptions": {}
+      },
+      "type": "n8n-nodes-base.renameKeys",
+      "typeVersion": 1,
+      "position": [
+        544,
+        -48
+      ],
+      "id": "59d8d722-ed7e-46e2-8c20-f550484a33df",
+      "name": "Rename Keys"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Date & Time",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Date & Time": {
+      "main": [
+        [
+          {
+            "node": "Date & Time1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Date & Time1": {
+      "main": [
+        [
+          {
+            "node": "Code",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code": {
+      "main": [
+        [
+          {
+            "node": "Fake Lead",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Fake Lead": {
+      "main": [
+        [
+          {
+            "node": "Rename Keys",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Rename Keys": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "f4b882a1-c729-43a3-951e-b11372c014d5",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "36ff5823de645247c409d00d5ed0aecd5c29499b9cb9437a651601e2b22aaceb"
+  },
+  "id": "2XdGcWOd5lJxDLpY",
+  "tags": []
+}
