@@ -1,0 +1,132 @@
+{
+  "name": "loop-over-items",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -320,
+        -48
+      ],
+      "id": "adef6ff5-d247-48ab-9472-79212bf89ad6",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        208,
+        -48
+      ],
+      "id": "f1a2a3e0-9600-4bd7-b098-b947648c4564",
+      "name": "Loop Over Items"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.noOp",
+      "name": "Replace Me",
+      "typeVersion": 1,
+      "position": [
+        416,
+        -16
+      ],
+      "id": "c8700156-3e18-4d00-9971-3210a9ba8101"
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "{\n  \"summary\": \"All leads processed successfully\"\n}\n\n\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        400,
+        -160
+      ],
+      "id": "04cb9981-db5b-4130-bee2-c404d3204ea6",
+      "name": "Edit Fields1"
+    },
+    {
+      "parameters": {
+        "jsCode": "return [\n  { json: { name: \"Rahul\", email: \"rahul@botcampus.ai\" } },\n  { json: { name: \"Priya\", email: \"priya@botcampus.ai\" } },\n  { json: { name: \"Aamir\", email: \"aamir@botcampus.ai\" } },\n  { json: { name: \"Fatima\", email: \"fatima@botcampus.ai\" } }\n];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -112,
+        -48
+      ],
+      "id": "706e57e2-e827-4400-b90a-c30168acee3e",
+      "name": "Code"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Code",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop Over Items": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Replace Me",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Replace Me": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "b317aef8-f0a9-4f51-a2e3-59fb40667892",
+  "meta": {
+    "instanceId": "36ff5823de645247c409d00d5ed0aecd5c29499b9cb9437a651601e2b22aaceb"
+  },
+  "id": "4NKqwR3V6rclShVK",
+  "tags": []
+}

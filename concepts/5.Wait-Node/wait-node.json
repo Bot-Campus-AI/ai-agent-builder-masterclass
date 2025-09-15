@@ -1,0 +1,107 @@
+{
+  "name": "wait-node",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -304,
+        -96
+      ],
+      "id": "8a807f1b-51bc-4470-883a-257623259de9",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "{\n  \"text\": \"Workflow started\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -96,
+        -96
+      ],
+      "id": "a3db41ea-4162-4019-ab35-29bb1eef0887",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "resume": "specificTime",
+        "dateTime": "2025-09-16T00:00:00"
+      },
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        112,
+        -96
+      ],
+      "id": "042e2a0f-62f1-4160-a379-7265f1334e18",
+      "name": "Wait",
+      "webhookId": "91addf9e-e9db-4f03-b3b6-606839dc06d4"
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "{\n  \"text\": \"Workflow resumed after wait\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        320,
+        -96
+      ],
+      "id": "f9d6fe0b-417d-4735-af49-fd8a47692275",
+      "name": "Edit Fields1"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Wait",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "6fae52d9-822e-485a-b48b-21656445f754",
+  "meta": {
+    "instanceId": "36ff5823de645247c409d00d5ed0aecd5c29499b9cb9437a651601e2b22aaceb"
+  },
+  "id": "2yH5yF450LDgwMb3",
+  "tags": []
+}
