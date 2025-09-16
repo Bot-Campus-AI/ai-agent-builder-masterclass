@@ -1,0 +1,336 @@
+{
+  "name": "customer-onboarding-workflow",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "customer-signup",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        -336,
+        -96
+      ],
+      "id": "cafed9c7-52a4-45f1-b2ff-cf53c7ef6ac1",
+      "name": "Webhook",
+      "webhookId": "73054306-f8e2-479b-b89e-2a838ac4af8c"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "17181d75-8999-4ddc-be86-1b281c6c52e9",
+              "leftValue": "={{ $json.body.email }}",
+              "rightValue": "@",
+              "operator": {
+                "type": "string",
+                "operation": "contains"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -128,
+        -96
+      ],
+      "id": "1c5b4bfe-acfe-47ad-a52c-2c9731f6807c",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "select": "channel",
+        "channelId": {
+          "__rl": true,
+          "value": "C09FELXFR7E",
+          "mode": "list",
+          "cachedResultName": "alerts"
+        },
+        "text": "=🚨 Invalid signup received. Name: {{$json.name}} Email: {{$json.email}} Company: {{$json.company}}",
+        "otherOptions": {}
+      },
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.3,
+      "position": [
+        80,
+        0
+      ],
+      "id": "9c197fa9-ee3a-401e-983d-adfbb2195b50",
+      "name": "Send a message",
+      "webhookId": "ce63a114-4c49-4ede-ba88-5640c9b263d8",
+      "credentials": {
+        "slackApi": {
+          "id": "byScDh3yo2v0Mb9y",
+          "name": "Slack account 5"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "table": {
+          "__rl": true,
+          "value": "customers",
+          "mode": "list",
+          "cachedResultName": "customers"
+        },
+        "dataMode": "defineBelow",
+        "valuesToSend": {
+          "values": [
+            {
+              "column": "name",
+              "value": "={{ $json.body.name }}"
+            },
+            {
+              "column": "email",
+              "value": "={{ $json.body.email }}"
+            },
+            {
+              "column": "company",
+              "value": "={{ $json.body.company }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.mySql",
+      "typeVersion": 2.4,
+      "position": [
+        64,
+        -208
+      ],
+      "id": "dec1df23-b5fb-40ae-baf2-f6d95aa388ee",
+      "name": "Insert rows in a table",
+      "credentials": {
+        "mySql": {
+          "id": "VJCpqa7vLq41auW6",
+          "name": "MySQL account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "=support@botcampus.ai",
+        "subject": "=Welcome to BotCampus AI, {{ $('Webhook').item.json.body.name }}",
+        "message": "=Hi {{ $('Webhook').item.json.body.name }},  \nWelcome to BotCampus AI 🎉 \n\nWe’re excited to have {{ $('Webhook').item.json.body.company }} on board.  \n\nStay tuned for more updates.  – BotCampus AI Team",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        272,
+        -224
+      ],
+      "id": "a3e81a92-694d-40a4-ba50-9ea45dbdda77",
+      "name": "Send a message1",
+      "webhookId": "f8c42f82-0efc-4eec-a50e-6cf792c794e5",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "r0DrwOaIQhXUFjkQ",
+          "name": "Gmail account 6"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "select": "channel",
+        "channelId": {
+          "__rl": true,
+          "value": "C09FELXFR7E",
+          "mode": "list",
+          "cachedResultName": "alerts"
+        },
+        "text": "=🎉 New Customer Onboarded! \n👤 Name: {{ $('Webhook').item.json.body.name }} \n🏢 Company: {{ $('Webhook').item.json.body.company }}\n📧 Email: {{ $('Webhook').item.json.body.email }}",
+        "otherOptions": {}
+      },
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.3,
+      "position": [
+        480,
+        -224
+      ],
+      "id": "bbf930c4-f26a-4e00-b47f-c9c4706aefbd",
+      "name": "Send a message2",
+      "webhookId": "2bbecf5c-3b0e-421d-9ae0-2b07f3a92983",
+      "credentials": {
+        "slackApi": {
+          "id": "byScDh3yo2v0Mb9y",
+          "name": "Slack account 5"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        608,
+        -448
+      ],
+      "id": "bd9b0977-2b39-425a-b647-4872b5f9520d",
+      "name": "Wait",
+      "webhookId": "54c3468a-8e9e-4809-946a-2371d5052bf8"
+    },
+    {
+      "parameters": {
+        "sendTo": "support@botcampus.ai",
+        "subject": "=Checking In – How’s it going, {{ $('Webhook').item.json.body.name }} ?",
+        "message": "=Hi {{ $('Webhook').item.json.body.name }},  \nIt’s been a day since you joined BotCampus AI 🚀   \nJust checking in to see how you’re finding things.  \nIf you have any questions, reply directly — we’d love to help.    \n\n– BotCampus AI Team",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        784,
+        -448
+      ],
+      "id": "149d5c2c-8261-4e04-b394-0853d4f61c3c",
+      "name": "Send a message3",
+      "webhookId": "912f8e93-12ab-4994-b6b0-be4c6bff9876",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "r0DrwOaIQhXUFjkQ",
+          "name": "Gmail account 6"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "select": "channel",
+        "channelId": {
+          "__rl": true,
+          "value": "C09FELXFR7E",
+          "mode": "list",
+          "cachedResultName": "alerts"
+        },
+        "text": "=✅ Follow-Up Email Sent! \n👤 Name: {{ $('Webhook').item.json.body.name }}\n🏢 Company: {{ $('Webhook').item.json.body.company }}\n📧 Email: {{ $('Webhook').item.json.body.email }}\nTime: {{$now}}",
+        "otherOptions": {}
+      },
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.3,
+      "position": [
+        928,
+        -448
+      ],
+      "id": "9349bd0c-0130-4f17-bcfd-fc05b5086884",
+      "name": "Send a message4",
+      "webhookId": "c1bb74f9-a22d-4a9e-a0f1-18237d53bf01",
+      "credentials": {
+        "slackApi": {
+          "id": "byScDh3yo2v0Mb9y",
+          "name": "Slack account 5"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Insert rows in a table",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Insert rows in a table": {
+      "main": [
+        [
+          {
+            "node": "Send a message1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send a message1": {
+      "main": [
+        [
+          {
+            "node": "Send a message2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send a message2": {
+      "main": [
+        [
+          {
+            "node": "Wait",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait": {
+      "main": [
+        [
+          {
+            "node": "Send a message3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send a message3": {
+      "main": [
+        [
+          {
+            "node": "Send a message4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "891a0cd2-f058-4bc8-9907-c38426eaf1b9",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "36ff5823de645247c409d00d5ed0aecd5c29499b9cb9437a651601e2b22aaceb"
+  },
+  "id": "fGUMxcAa0DVnXJGY",
+  "tags": []
+}
