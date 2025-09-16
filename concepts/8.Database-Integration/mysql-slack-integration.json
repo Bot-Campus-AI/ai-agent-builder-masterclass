@@ -1,0 +1,141 @@
+{
+  "name": "mysql-slack-integration",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -272,
+        -48
+      ],
+      "id": "8cb4512d-1cb7-4134-9c80-1af4d3ce7be7",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "SELECT id, first_name, last_name, email, company\nFROM customers\nWHERE created_at >= NOW() - INTERVAL 1 DAY;",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.mySql",
+      "typeVersion": 2.4,
+      "position": [
+        -64,
+        -48
+      ],
+      "id": "a30c63c2-46ab-4be5-96e3-6f0332f910c1",
+      "name": "Execute a SQL query",
+      "credentials": {
+        "mySql": {
+          "id": "VJCpqa7vLq41auW6",
+          "name": "MySQL account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "keys": {
+          "key": [
+            {
+              "currentKey": "first_name",
+              "newKey": "FirstName"
+            },
+            {
+              "currentKey": "last_name",
+              "newKey": "LastName"
+            },
+            {
+              "currentKey": "company",
+              "newKey": "Company"
+            }
+          ]
+        },
+        "additionalOptions": {}
+      },
+      "type": "n8n-nodes-base.renameKeys",
+      "typeVersion": 1,
+      "position": [
+        144,
+        -48
+      ],
+      "id": "0584680d-f7e7-4146-966a-ad93b33c9c7e",
+      "name": "Rename Keys"
+    },
+    {
+      "parameters": {
+        "select": "channel",
+        "channelId": {
+          "__rl": true,
+          "value": "C09FELXFR7E",
+          "mode": "list",
+          "cachedResultName": "alerts"
+        },
+        "text": "=🎉 New Customer Added!   👤 Name: {{$json[\"FirstName\"]}} {{$json[\"LastName\"]}}   🏢 Company: {{$json[\"Company\"]}}   📧 Email: {{$json[\"email\"]}}",
+        "otherOptions": {}
+      },
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.3,
+      "position": [
+        352,
+        -48
+      ],
+      "id": "9222208a-850e-4320-8dbe-ec9628df8f6a",
+      "name": "Send a message",
+      "webhookId": "3019ac9b-0200-4457-8be4-e2079b7b7084",
+      "credentials": {
+        "slackApi": {
+          "id": "byScDh3yo2v0Mb9y",
+          "name": "Slack account 5"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Execute a SQL query",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Execute a SQL query": {
+      "main": [
+        [
+          {
+            "node": "Rename Keys",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Rename Keys": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "1e48c628-e46f-4fcb-a177-83e88c6b6773",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "36ff5823de645247c409d00d5ed0aecd5c29499b9cb9437a651601e2b22aaceb"
+  },
+  "id": "4AiPX7H1f02WXf9c",
+  "tags": []
+}
