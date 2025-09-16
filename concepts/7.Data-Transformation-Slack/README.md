@@ -29,8 +29,18 @@
 4. **Install the App to the Workspace**
 
    * Still under **OAuth & Permissions**, click **Install to Workspace** → **Allow**.
-   * Copy the **Bot User OAuth Token** (starts with `xoxb-…`).
-     *This is the token you’ll paste into n8n.*
+     * Copy the **Bot User OAuth Token** (starts with `xoxb-…`).
+       *This is the token you’ll paste into n8n.*
+
+     *📍 Where to Find the Signing Secret:*
+       1. Go to your Slack App at https://api.slack.com/apps.
+       2. Select your app (BotCampus Alerts or whatever you created).
+       3. In the left menu, go to Basic Information.
+       4. Under App Credentials, you’ll see:
+           * Client ID
+           * Client Secret
+           * Signing Secret ✅ → copy this.
+       Paste this into the Signature Secret field in n8n.
 
 5. **Invite the Bot to Your Channel**
 
