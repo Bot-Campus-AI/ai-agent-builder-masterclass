@@ -1,0 +1,123 @@
+{
+  "name": "multi-channel-workflow",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -368,
+        -64
+      ],
+      "id": "3771ccea-d747-43c9-83f7-d68cc43f5b8f",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "{\n  \"name\": \"Priya Nair\",\n  \"email\": \"priya.nair@accenture.com\",\n  \"company\": \"Accenture\"\n}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -160,
+        -64
+      ],
+      "id": "ed0ec875-fa53-44e6-a5e1-da30e411d961",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "select": "channel",
+        "channelId": {
+          "__rl": true,
+          "value": "C09FELXFR7E",
+          "mode": "list",
+          "cachedResultName": "alerts"
+        },
+        "text": "=🚀 New Lead Captured!   👤 Name: {{$json[\"name\"]}}   🏢 Company: {{$json[\"company\"]}}   📧 Email: {{$json[\"email\"]}}",
+        "otherOptions": {}
+      },
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.3,
+      "position": [
+        80,
+        -208
+      ],
+      "id": "87064186-f4e3-488c-acc3-4c21b533f05e",
+      "name": "Send a message",
+      "webhookId": "5a531d40-505e-4782-bece-7e532831b153",
+      "credentials": {
+        "slackApi": {
+          "id": "byScDh3yo2v0Mb9y",
+          "name": "Slack account 5"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "=support@botcampus.ai",
+        "subject": "=New Lead Captured - {{$json[\"name\"]}}",
+        "message": "=A new lead has been captured:  Name: {{$json[\"name\"]}} Email: {{$json[\"email\"]}} Company: {{$json[\"company\"]}}  Sent automatically via n8n 🚀",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        80,
+        32
+      ],
+      "id": "e9f0202c-5e81-4b84-a734-ea7eea5ec71b",
+      "name": "Send a message1",
+      "webhookId": "500effdf-73f4-4774-ae98-622f4a692125",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "r0DrwOaIQhXUFjkQ",
+          "name": "Gmail account 6"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Send a message1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "fbea8fe6-ed3a-47b6-a472-95c50186fc14",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "36ff5823de645247c409d00d5ed0aecd5c29499b9cb9437a651601e2b22aaceb"
+  },
+  "id": "S2JFJIzRvueyxvuf",
+  "tags": []
+}
