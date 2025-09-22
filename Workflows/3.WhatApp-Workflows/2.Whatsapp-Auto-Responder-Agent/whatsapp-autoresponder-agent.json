@@ -1,0 +1,166 @@
+{
+  "name": "Whatsapp-AutoResponder-Agent",
+  "nodes": [
+    {
+      "parameters": {
+        "updates": [
+          "messages"
+        ],
+        "options": {}
+      },
+      "type": "n8n-nodes-base.whatsAppTrigger",
+      "typeVersion": 1,
+      "position": [
+        -224,
+        -80
+      ],
+      "id": "38cf0f53-2260-4d04-aa30-f07d1c5d4202",
+      "name": "WhatsApp Trigger",
+      "webhookId": "48f5c69a-ac44-4583-a315-e1c377075246",
+      "credentials": {
+        "whatsAppTriggerApi": {
+          "id": "rTZUVDZOk1IOu2VJ",
+          "name": "WhatsApp OAuth account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.messages[0].text.body }}",
+        "options": {
+          "systemMessage": "=You are a helpful assistant called Max.\nRespond in a friendly tone.\n\nYou are currently speaking to  {{ $json.contacts[0].profile.name }}\n\nThe current date and time is {{ $now.toISO() }}"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2.2,
+      "position": [
+        -16,
+        -80
+      ],
+      "id": "3d87c04c-6048-474f-b84b-e788a3c365d2",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4.1-mini"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        -16,
+        128
+      ],
+      "id": "f7a2ba5c-3460-49a9-8d76-c4330013bb88",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "HL3g6Y6t0fb27Cli",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "send",
+        "phoneNumberId": "788204457712061",
+        "recipientPhoneNumber": "={{ $('WhatsApp Trigger').item.json.messages[0].from }}",
+        "textBody": "={{ $json.output }}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.whatsApp",
+      "typeVersion": 1,
+      "position": [
+        336,
+        -80
+      ],
+      "id": "97fcad2b-fabf-46fd-b40f-da3ab812d874",
+      "name": "Send message",
+      "webhookId": "e6e82fd1-4b0b-4732-b69f-401ff4bf86d5",
+      "credentials": {
+        "whatsAppApi": {
+          "id": "Hvq6QdUUbYuHZCzg",
+          "name": "WhatsApp account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $json.messaging_product }}",
+        "contextWindowLength": 10
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        80,
+        224
+      ],
+      "id": "2a3901c4-c5d3-445b-88d1-a75498a81f5b",
+      "name": "Simple Memory"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "WhatsApp Trigger": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Send message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "1523eadf-7798-49e1-910c-fb0d631312f4",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "735b0f6a9ea6bc91a8b306f258ff6e0e4733322b345ec2a044ec1a8a559138ce"
+  },
+  "id": "GKlZRMqWxbIprKzm",
+  "tags": []
+}
